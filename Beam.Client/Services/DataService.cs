@@ -55,9 +55,9 @@ namespace Beam.Client.Services
             UpdatedRays?.Invoke();
         }
 
-        public async Task<List<Ray>> GetMyRays()
+        public async Task<List<Ray>> GetUserRays(string name)
         {            
-            return await http.GetFromJsonAsync<List<Ray>>($"/api/ray/user/{CurrentUser.Name}");
+            return await http.GetFromJsonAsync<List<Ray>>($"/api/ray/user/{name ?? CurrentUser.Name}");
         }
 
         public async Task AddFrequency(string Name)

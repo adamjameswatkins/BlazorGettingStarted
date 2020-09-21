@@ -1,4 +1,5 @@
 @page "/User"
+@page "/User/{name}"
 @inject DataService data
 @using Beam.Shared
 
@@ -12,10 +13,12 @@
 
 @code
 {
+    [Parameter]
+    public string Name {get;set;}
     List<Ray> Rays = new List<Ray>();
 
         protected override async Task OnInitializedAsync()
         {
-            Rays = await data.GetMyRays();
+            Rays = await data.GetUserRays(Name);
         }
 }
