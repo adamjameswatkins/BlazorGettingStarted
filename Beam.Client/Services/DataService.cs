@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace Beam.Client.Services
 {
-    public class DataService
+    public class DataService : IDataService
     {
         public IReadOnlyList<Frequency> Frequencies { get; private set; }
         public IReadOnlyList<Ray> Rays { get; private set; } = new List<Ray>();
         public User CurrentUser { get; set; }
-
-        private int? selectedFrequency;
-        private readonly BeamApiService apiService;
+        public int? selectedFrequency { get; set; }
+        private readonly IBeamApiService apiService;
 
         public int SelectedFrequency
         {
@@ -32,7 +31,7 @@ namespace Beam.Client.Services
             }
         }
 
-        public DataService(BeamApiService apiService)
+        public DataService(IBeamApiService apiService)
         {
             this.apiService = apiService;
             if (CurrentUser == null) CurrentUser = new User() { Name = "Anon" + new Random().Next(0, 10) };
