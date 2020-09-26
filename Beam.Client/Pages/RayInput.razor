@@ -5,7 +5,7 @@
         <EditForm Model="@newRay" OnValidSubmit="CastRay">
         <DataAnnotationsValidator/>
             <div class="input-group">
-                <input @bind="newRay.Text" class="form-control" />
+                <InputTextArea @bind-Value="newRay.Text" class="form-control" />
                 <div class="input-group-append">
                     <button @onclick="ClearText" type="button" class="btn btn-outline-secondary"><span class="oi oi-circle-x"></span></button>
                     <button type="submit" class="btn btn-outline-secondary"><span class="oi oi-audio"></span></button>
