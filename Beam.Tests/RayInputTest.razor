@@ -2,20 +2,23 @@
 
 <SnapshotTest Description="Ray Input With Parameter" Setup="@Setup">
     <TestInput>
-        <RayInput newRayText="test text"/>
+        <RayInput newRay="@newRay"/>
     </TestInput>
     <ExpectedOutput>
         <p></p>
         <Card Title="Cast a New Ray">
-            <div class="input-group">
-                <input class="form-control" value="test text" >
-                <div diff:ignore></div>
-            </div>
+            <form>
+                <div class="input-group">
+                    <input class="form-control" value="test text" >
+                    <div diff:ignore></div>
+                </div>
+            </form>
         </Card>
         <p></p>
     </ExpectedOutput>
     @code
     {
+        NewRay newRay = new NewRay() {Text = "test text"};
         void Setup(SnapshotTest test)
         {
             test.Services.AddSingleton<IDataService, TestDataService>();

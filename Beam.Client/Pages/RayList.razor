@@ -2,7 +2,7 @@
 @inject IDataService data
 
 
-<RayInput @bind-newRayText="newRayText" RayCast="@RayCast"/>
+<RayInput @bind-newRay="newRay" RayCast="@RayCast"/>
 
 <div class="spinner-border" role="status" hidden="@hideLoading">
     <span class="sr-only">Loading...</span>
@@ -22,7 +22,7 @@
     [Parameter]
     public int Id { get; set; }
 
-    public string newRayText { get; set; }
+    public NewRay newRay { get; set; } = new NewRay();
 
     public bool hideLoading { get; set; } = false;
 
@@ -37,7 +37,7 @@
         this.hideLoading = true;
         if (!data.Rays.Any(r => r.UserName == data.CurrentUser.Name))
         {
-            newRayText = $"Hello, My Name is {data.CurrentUser.Name}";
+            newRay.Text = $"Hello, My Name is {data.CurrentUser.Name}";
         }
         StateHasChanged();
     }
