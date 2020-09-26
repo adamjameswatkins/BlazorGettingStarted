@@ -25,3 +25,80 @@
         }
     }
 </SnapshotTest>
+
+<Fixture Description="Ray not cast if empty input" Test="RayNotCastIfEmptyInput">
+    <ComponentUnderTest>
+        <RayInput newRay="@newRay"/>
+    </ComponentUnderTest>
+    <Fragment>
+        <p></p>
+        <Card Title="Cast a New Ray">
+            <form>
+                <div class="input-group">
+                    <textarea class="form-control invalid" value="" ></textarea>
+                    <div diff:ignore=""></div>
+                </div>
+                <div class="validation-message">The Ray Text field is required.</div>
+            </form>
+        </Card>
+        <p></p>
+    </Fragment>
+</Fixture>
+
+@code
+{
+    void RayNotCastIfEmptyInput(Fixture fixture)
+    {
+        fixture.Services.AddSingleton<NavigationManager, MockNavigationManager>();
+        fixture.Services.AddSingleton<IDataService, TestDataService>();
+
+        // Arrange
+        newRay.Text = "";
+        var cut = fixture.GetComponentUnderTest<RayInput>();
+
+        // Act - click button to add Frequncy
+        cut.Find("form").Submit();
+
+        // Assert that the counter was incremented
+        var expected = fixture.GetFragment();
+        cut.MarkupMatches(expected);
+    }
+}
+
+<Fixture Description="Ray cast if not empty input" Test="RayCastIfNotEmptyInput">
+    <ComponentUnderTest>
+        <RayInput newRay="@newRay"/>
+    </ComponentUnderTest>
+    <Fragment>
+        <p></p>
+        <Card Title="Cast a New Ray">
+            <form>
+                <div class="input-group">
+                    <textarea class="form-control valid" value="" ></textarea>
+                    <div diff:ignore=""></div>
+                </div>
+            </form>
+        </Card>
+        <p></p>
+    </Fragment>
+</Fixture>
+
+@code
+{
+    void RayCastIfNotEmptyInput(Fixture fixture)
+    {
+        fixture.Services.AddSingleton<NavigationManager, MockNavigationManager>();
+        fixture.Services.AddSingleton<IDataService, TestDataService>();
+
+        // Arrange
+        newRay.Text = "Hello";
+        var cut = fixture.GetComponentUnderTest<RayInput>();
+
+        // Act - click button to add Frequncy
+        cut.Find("form").Submit();
+
+        // Assert that the counter was incremented
+        var expected = fixture.GetFragment();
+        cut.MarkupMatches(expected);
+    }
+}
