@@ -11,7 +11,8 @@ namespace Beam.Client.Services
         public IReadOnlyList<Frequency> Frequencies { get; private set; }
         public IReadOnlyList<Ray> Rays { get; private set; } = new List<Ray>();
         public User CurrentUser { get; set; }
-        public int? selectedFrequency { get; set; }
+
+        private int? selectedFrequency;
         private readonly IBeamApiService apiService;
 
         public int SelectedFrequency

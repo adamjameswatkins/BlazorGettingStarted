@@ -12,12 +12,13 @@ namespace Beam.Client.Services
 
         public BeamApiService(HttpClient httpClient)
         {
-            this.http = httpClient;
+            http = httpClient;
         }
 
         public Task<List<Ray>> UserRays(string name)
         {
-            return http.GetFromJsonAsync<List<Ray>>($"/api/ray/user/{name}");
+            return http.GetFromJsonAsync<List<Ray>>
+                            ($"/api/Ray/user/{name}");
         }
 
         public Task<List<Frequency>> FrequencyList()
