@@ -3,14 +3,16 @@
 <p>
     <Card Title="Cast a New Ray">
         <EditForm Model="@newRay" OnValidSubmit="CastRay">
-        <DataAnnotationsValidator/>
-            <div class="input-group">
-                <InputTextArea @bind-Value="newRay.Text" class="form-control" />
-                <div class="input-group-append">
-                    <button @onclick="ClearText" type="button" class="btn btn-outline-secondary"><span class="oi oi-circle-x"></span></button>
-                    <button type="submit" class="btn btn-outline-secondary"><span class="oi oi-audio"></span></button>
-                </div>
+            <DataAnnotationsValidator/>
+        <div class="input-group">
+            <InputTextArea @bind-Value="newRay.Text" class="form-control" />
+            <div class="input-group-append">
+                <button @onclick="ClearText" type="button" class="btn btn-outline-secondary">
+                    <span class="oi oi-circle-x"></span></button>
+                <button type="submit" class="btn btn-outline-secondary">
+                    <span class="oi oi-audio"></span></button>
             </div>
+        </div>
         <ValidationMessage For="@(() => newRay.Text)"/>
         </EditForm>
     </Card>
@@ -19,22 +21,21 @@
 @code
 {
     [Parameter]
-    public NewRay newRay { get; set; } = new NewRay();
+    public RayToCast newRay { get; set; } = new RayToCast();
     [Parameter]
-    public EventCallback<NewRay> newRayChanged { get; set; }
+    public EventCallback<RayToCast> newRayChanged { get; set; }
     [Parameter]
     public EventCallback<string> RayCast { get; set; }
+
+    async Task CastRay()
+    {
+        await RayCast.InvokeAsync(newRay.Text);
+        await data.CreateRay(newRay.Text);
+        newRay.Text = "";
+    }
 
     void ClearText()
     {
         newRay.Text = "";
-    }
-
-    async Task CastRay()
-    {
-        var text = newRay.Text;
-        newRay.Text = "";
-        await RayCast.InvokeAsync(text);
-        await data.CreateRay(text);
     }
 }

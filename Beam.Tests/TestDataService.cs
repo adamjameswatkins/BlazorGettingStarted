@@ -31,6 +31,7 @@ namespace Beam.Tests
 
         public Task CreateRay(string text)
         {
+            UpdatedRays?.Invoke();
             return Task.CompletedTask;
         }
 

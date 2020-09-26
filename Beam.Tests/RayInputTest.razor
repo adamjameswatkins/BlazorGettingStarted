@@ -2,7 +2,7 @@
 
 <SnapshotTest Description="Ray Input With Parameter" Setup="@Setup">
     <TestInput>
-        <RayInput newRay="@newRay"/>
+        <RayInput newRay="@(new RayToCast() {Text = "test text"})"/>
     </TestInput>
     <ExpectedOutput>
         <p></p>
@@ -18,7 +18,6 @@
     </ExpectedOutput>
     @code
     {
-        NewRay newRay = new NewRay() {Text = "test text"};
         void Setup(SnapshotTest test)
         {
             test.Services.AddSingleton<IDataService, TestDataService>();
@@ -26,9 +25,9 @@
     }
 </SnapshotTest>
 
-<Fixture Description="Ray not cast if empty input" Test="RayNotCastIfEmptyInput">
+<Fixture Description="Ray Not Created for empty Input" Test="EmptyInputDoesntCreate">
     <ComponentUnderTest>
-        <RayInput newRay="@newRay"/>
+        <RayInput newRay="@(new RayToCast())"/>
     </ComponentUnderTest>
     <Fragment>
         <p></p>
@@ -38,36 +37,16 @@
                     <textarea class="form-control invalid" value="" ></textarea>
                     <div diff:ignore=""></div>
                 </div>
-                <div class="validation-message">The Ray Text field is required.</div>
+                <div class="validation-message">You can't send an empty Ray!</div>
             </form>
         </Card>
         <p></p>
     </Fragment>
 </Fixture>
 
-@code
-{
-    void RayNotCastIfEmptyInput(Fixture fixture)
-    {
-        fixture.Services.AddSingleton<NavigationManager, MockNavigationManager>();
-        fixture.Services.AddSingleton<IDataService, TestDataService>();
-
-        // Arrange
-        newRay.Text = "";
-        var cut = fixture.GetComponentUnderTest<RayInput>();
-
-        // Act - click button to add Frequncy
-        cut.Find("form").Submit();
-
-        // Assert that the counter was incremented
-        var expected = fixture.GetFragment();
-        cut.MarkupMatches(expected);
-    }
-}
-
-<Fixture Description="Ray cast if not empty input" Test="RayCastIfNotEmptyInput">
+<Fixture Description="Ray Created with Valid Input" Test="ValidInputCallsCreate">
     <ComponentUnderTest>
-        <RayInput newRay="@newRay"/>
+        <RayInput newRay="@(new RayToCast(){ Text = "Test" })"/>
     </ComponentUnderTest>
     <Fragment>
         <p></p>
@@ -85,20 +64,43 @@
 
 @code
 {
-    void RayCastIfNotEmptyInput(Fixture fixture)
+    void EmptyInputDoesntCreate(Fixture fixture)
     {
-        fixture.Services.AddSingleton<NavigationManager, MockNavigationManager>();
-        fixture.Services.AddSingleton<IDataService, TestDataService>();
-
         // Arrange
-        newRay.Text = "Hello";
+        var testDataService = new TestDataService();
+        fixture.Services.AddSingleton<NavigationManager, MockNavigationManager>();
+        fixture.Services.AddSingleton<IDataService>(testDataService);
         var cut = fixture.GetComponentUnderTest<RayInput>();
+
+        bool updateTriggered = false;
+        testDataService.UpdatedRays += () => updateTriggered = true;
 
         // Act - click button to add Frequncy
         cut.Find("form").Submit();
 
         // Assert that the counter was incremented
         var expected = fixture.GetFragment();
+        Assert.False(updateTriggered);
+        cut.MarkupMatches(expected);
+    }
+    
+    void ValidInputCallsCreate(Fixture fixture)
+    {
+        // Arrange
+        var testDataService = new TestDataService();
+        fixture.Services.AddSingleton<NavigationManager, MockNavigationManager>();
+        fixture.Services.AddSingleton<IDataService>(testDataService);
+        var cut = fixture.GetComponentUnderTest<RayInput>();
+
+        bool updateTriggered = false;
+        testDataService.UpdatedRays += () => updateTriggered = true;
+
+        // Act - click button to add Frequncy
+        cut.Find("form").Submit();
+
+        // Assert that the counter was incremented
+        var expected = fixture.GetFragment();
+        Assert.True(updateTriggered);
         cut.MarkupMatches(expected);
     }
 }
