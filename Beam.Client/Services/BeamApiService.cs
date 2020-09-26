@@ -1,4 +1,5 @@
 using Beam.Shared;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -43,9 +44,9 @@ namespace Beam.Client.Services
             return await resp.Content.ReadFromJsonAsync<List<Ray>>();
         }
 
-        public Task<User> GetUser(string name)
+        public Task<User> GetUser()
         {
-            return http.GetFromJsonAsync<User>($"api/User/Get/{name}");
+            return http.GetFromJsonAsync<User>($"api/User");
         }
 
         public async Task<List<Ray>> PrismRay(Prism prism)
@@ -57,6 +58,30 @@ namespace Beam.Client.Services
         public Task<List<Ray>> UnPrismRay(int rayId, int userId)
         {
             return http.GetFromJsonAsync<List<Ray>>($"api/Prism/Remove/{userId}/{rayId}");
+        }
+
+        public async Task Login(Login login)
+        {
+            var response = await http.PostAsJsonAsync("api/auth/login", login);
+            if(!response.IsSuccessStatusCode)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
+            }
+        }
+
+        public async Task Register(Login login)
+        {
+            var response = await http.PostAsJsonAsync("api/auth/register", login);
+            if(!response.IsSuccessStatusCode)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
+            }
+        }
+
+        public async Task Logout()
+        {
+            var response = await http.PostAsync("api/auth/logout", null);
+            response.EnsureSuccessStatusCode();
         }
     }
 }

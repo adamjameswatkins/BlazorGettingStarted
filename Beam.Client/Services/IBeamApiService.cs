@@ -16,10 +16,16 @@ namespace Beam.Client.Services
 
         Task<List<Ray>> AddRay(Ray ray);
 
-        Task<User> GetUser(string name);
+        Task<User> GetUser();
 
         Task<List<Ray>> PrismRay(Prism prism);
 
         Task<List<Ray>> UnPrismRay(int rayId, int userId);
+
+        Task Login(Login login);
+
+        Task Register(Login login);
+
+        Task Logout();
     }
 }
