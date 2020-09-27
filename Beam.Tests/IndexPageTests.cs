@@ -5,6 +5,7 @@ using Bunit.Mocking.JSInterop;
 using static Bunit.ComponentParameterFactory;
 using Beam.Tests.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Beam.Tests
 {
@@ -28,6 +29,20 @@ namespace Beam.Tests
             Assert.Contains("Select a Frequency, or create a new one", cut.Markup);
             cut.MarkupMatches(@"<h2 diff:ignore></h2>
                                 <p diff:ignore></p>"); 
+        }
+
+        [Fact]
+        public void NotAuthorizedViewIsShownAfterFailedLogin()
+        {
+            Services.AddAuthenticationServices(TestAuthenticationStateProvider.CreateAuthenticationState("TestUser"), AuthorizationResult.Failed());
+
+            var wrapper = RenderComponent<CascadingAuthenticationState>(p => p.AddChildContent<Beam.Client.Pages.Index>());
+
+            // Arrange
+            var cut = wrapper.FindComponent<Beam.Client.Pages.Index>();
+
+            // Assert
+            cut.MarkupMatches(@"<h2>Login is required</h2>"); 
         }
     }
 }
