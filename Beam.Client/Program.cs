@@ -27,6 +27,8 @@ namespace Beam.Client
 
             builder.Services.AddBlazoredLocalStorage();
 
+            builder.Services.AddSingleton<AnimationService>();
+
             await builder.Build().RunAsync();
         }
     }

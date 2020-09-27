@@ -1,10 +1,23 @@
 @page "/settings"
 @inject IDataService data
+@inject AnimationService animationService
+
 <AuthorizeView>
     <Authorized>
         <span>Username</span>
         <div class="input-group">
             <label class="form-control">@context.User.Identity.Name</label>
         </div>
+        <div id="animationHost"></div>
     </Authorized>
 </AuthorizeView>
+@code
+{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await animationService.LoadAnimation("animationHost", 1000, 200);
+        }
+    }
+}
