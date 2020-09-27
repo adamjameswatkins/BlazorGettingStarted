@@ -6,6 +6,8 @@ using static Bunit.ComponentParameterFactory;
 using Beam.Tests.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Components;
 
 namespace Beam.Tests
 {
@@ -32,9 +34,11 @@ namespace Beam.Tests
         }
 
         [Fact]
-        public void NotAuthorizedViewIsShownAfterFailedLogin()
+        public void IndexShowsLoginLinkWhenUnauthorized()
         {
-            Services.AddAuthenticationServices(TestAuthenticationStateProvider.CreateAuthenticationState("TestUser"), AuthorizationResult.Failed());
+            Services.AddAuthenticationServices(TestAuthenticationStateProvider.CreateUnauthenticationState(), AuthorizationResult.Failed());
+
+            Services.AddScoped<NavigationManager, MockNavigationManager>();
 
             var wrapper = RenderComponent<CascadingAuthenticationState>(p => p.AddChildContent<Beam.Client.Pages.Index>());
 
@@ -42,7 +46,8 @@ namespace Beam.Tests
             var cut = wrapper.FindComponent<Beam.Client.Pages.Index>();
 
             // Assert
-            cut.MarkupMatches(@"<h2>Login is required</h2>"); 
+             Assert.DoesNotContain("Select a Frequency, or create a new one", cut.Markup);
+            cut.Find("a").MarkupMatches("<a href=\"/login\">Log In</a>"); 
         }
     }
 }
