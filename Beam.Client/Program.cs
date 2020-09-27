@@ -1,4 +1,5 @@
-﻿using Beam.Client.Services;
+﻿using Beam.Animation.Services;
+using Beam.Client.Services;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.Authorization;
