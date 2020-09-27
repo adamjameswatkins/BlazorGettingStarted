@@ -1,4 +1,5 @@
 using Microsoft.JSInterop;
+using System;
 using System.Threading.Tasks;
 
 namespace Beam.Client.Services
@@ -6,6 +7,8 @@ namespace Beam.Client.Services
     public class AnimationService
     {
         private IJSRuntime jsRuntime;
+
+        public static event Action BeamPassTriggered;
 
         public AnimationService(IJSRuntime jsRuntime)
         {
@@ -15,6 +18,12 @@ namespace Beam.Client.Services
         public ValueTask LoadAnimation(string elementId, int width, int height)
         {
             return jsRuntime.InvokeVoidAsync("animatedBeam.loadAnimation", elementId, width, height);
+        }
+
+        [JSInvokable]
+        public static Task BeamPassedBy()
+        {
+            return Task.Run(() => BeamPassTriggered?.Invoke());
         }
     }
 }
