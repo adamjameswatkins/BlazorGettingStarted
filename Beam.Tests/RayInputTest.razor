@@ -21,6 +21,7 @@
         void Setup(SnapshotTest test)
         {
             test.Services.AddSingleton<IDataService, TestDataService>();
+            test.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
         }
     }
 </SnapshotTest>
@@ -68,8 +69,8 @@
     {
         // Arrange
         var testDataService = new TestDataService();
-        fixture.Services.AddSingleton<NavigationManager, MockNavigationManager>();
         fixture.Services.AddSingleton<IDataService>(testDataService);
+        fixture.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
         var cut = fixture.GetComponentUnderTest<RayInput>();
 
         bool updateTriggered = false;
@@ -83,13 +84,13 @@
         Assert.False(updateTriggered);
         cut.MarkupMatches(expected);
     }
-    
+
     void ValidInputCallsCreate(Fixture fixture)
     {
         // Arrange
         var testDataService = new TestDataService();
-        fixture.Services.AddSingleton<NavigationManager, MockNavigationManager>();
         fixture.Services.AddSingleton<IDataService>(testDataService);
+        fixture.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
         var cut = fixture.GetComponentUnderTest<RayInput>();
 
         bool updateTriggered = false;

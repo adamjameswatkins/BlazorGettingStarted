@@ -1,4 +1,5 @@
 ﻿using Beam.Client.Services;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,8 @@ namespace Beam.Client
             builder.Services.AddScoped<BeamAuthenticationStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider>
             (s => s.GetRequiredService<BeamAuthenticationStateProvider>());
+
+            builder.Services.AddBlazoredLocalStorage();
 
             await builder.Build().RunAsync();
         }
