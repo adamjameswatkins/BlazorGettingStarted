@@ -10,7 +10,13 @@ namespace Beam.Client.Services
     public class DataService : IDataService
     {
         public IReadOnlyList<Frequency> Frequencies { get; private set; }
-        public IReadOnlyList<Ray> Rays { get; private set; } = new List<Ray>();
+        private IReadOnlyList<Ray> rays = new List<Ray>();
+        public IReadOnlyList<Ray> Rays
+        {
+            get => rays;
+            private set => rays = value.OrderByDescending(r => r.RayId).ToList();
+        }
+
         public User CurrentUser { get; set; }
 
         private int? selectedFrequency;
