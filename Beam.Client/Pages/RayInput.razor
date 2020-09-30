@@ -3,7 +3,7 @@
 @inject IJSRuntime jsRuntime
 
 <p>
-    <Card Title="Cast a New Ray">
+    <Beam.Client.Pages.Card Title="Cast a New Ray">
         <EditForm Model="@newRay" OnValidSubmit="CastRay" OnInvalidSubmit="FocusInputArea">
             <DataAnnotationsValidator/>
         <div class="input-group" @ref="RayInputGroup">
@@ -17,7 +17,7 @@
         </div>
         <ValidationMessage For="@(() => newRay.Text)"/>
         </EditForm>
-    </Card>
+    </Beam.Client.Pages.Card>
 </p>
 
 @code

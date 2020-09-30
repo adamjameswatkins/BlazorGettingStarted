@@ -1,6 +1,9 @@
 ﻿using Beam.Animation.Services;
 using Beam.Client.Services;
 using Blazored.LocalStorage;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +19,15 @@ namespace Beam.Client
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("app");
+
+            builder.Services
+                  .AddBlazorise(options =>
+                 {
+                     options.ChangeTextOnKeyPress = true;
+                 })
+                  .AddBootstrapProviders()
+                  .AddFontAwesomeIcons();
+
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddTransient<IBeamApiService, BeamApiService>();
             builder.Services.AddSingleton<IDataService, DataService>();
@@ -30,7 +42,13 @@ namespace Beam.Client
 
             builder.Services.AddSingleton<AnimationService>();
 
-            await builder.Build().RunAsync();
+            var host = builder.Build();
+
+            host.Services
+                  .UseBootstrapProviders()
+                  .UseFontAwesomeIcons();
+
+            await host.RunAsync();
         }
     }
 }
