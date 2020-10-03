@@ -38,6 +38,21 @@
                     </Columns>
                 </RadzenGrid>
             </RadzenTabsItem>
+            <RadzenTabsItem Text="Chart">
+                <RadzenChart>
+                <RadzenLineSeries Smooth="false" Data="@ChartData" CategoryProperty="RayCastDate" Title="Prism Count" LineType="LineType.Dashed" ValueProperty="PrismCount">
+                    <RadzenMarkers MarkerType="MarkerType.Square" />
+                </RadzenLineSeries>
+                <RadzenLineSeries Smooth="false" Data="@ChartData" CategoryProperty="RayCastDate" Title="Ray Length" LineType="LineType.Dashed" ValueProperty="TextLength">
+                    <RadzenMarkers MarkerType="MarkerType.Square" />
+                </RadzenLineSeries>
+                <RadzenCategoryAxis Padding="20" FormatString="{0:hh:mm}" />
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle />
+                </RadzenValueAxis>
+            </RadzenChart>
+            </RadzenTabsItem>
         </Tabs>
 </RadzenTabs>
 
@@ -48,6 +63,7 @@
     [Parameter]
     public string Name { get; set; }
     List<Ray> Rays = new List<Ray>();
+    List<RayChartData> ChartData = new List<RayChartData>();
 
     protected override void OnInitialized()
     {
@@ -61,5 +77,18 @@
     protected override async Task OnParametersSetAsync()
     {
         Rays = await data.GetUserRays(Name);
+        ChartData = Rays.Select(r => new RayChartData()
+        {
+            PrismCount = r.PrismCount,
+            TextLength = r.Text.Length,
+            RayCastDate = r.RayCastDate
+        }).ToList();
+    }
+
+    private class RayChartData
+    {
+        public int TextLength { get; set; }
+        public int PrismCount { get; set; }
+        public DateTime RayCastDate { get; set; }
     }
 }
